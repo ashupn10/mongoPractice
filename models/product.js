@@ -23,11 +23,10 @@ class Product{
       console.log(err);
     }
   }
-  static findById(id){
+  static async findById(id){
     try{
       const db=getDb();
-      console.log('ID',id);
-      return db.collection('products').findOne({_id:new mongodb.ObjectId(`${id}`)});
+      return await db.collection('products').findOne({_id:new mongodb.ObjectId(`${id}`)});
     }catch(err){
       console.log(err);
     }

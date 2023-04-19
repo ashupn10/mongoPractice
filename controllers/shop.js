@@ -15,6 +15,7 @@ exports.getProducts =async (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   try{
+    console.log(req.params);
     const product=await Product.findById(req.params.productId);
     console.log('Newproduct',product);
     console.log('title',product.title);
