@@ -2,9 +2,7 @@ const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 let db;
 const mongoConnect = callback => {
-  MongoClient.connect(
-    'mongodb+srv://ashupn10:AsRv1P3Xz0JH6r97@sandbox.wa2fc.mongodb.net/shop?retryWrites=true&w=majority'
-  )
+  MongoClient.connect(process.env.MONGO_SECRET_KEY)
     .then(client => {
       console.log('Connected!');
       db=client.db();
