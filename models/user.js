@@ -28,6 +28,24 @@ class User{
     return db.collection('users')
     .updateOne({_id:new mongodb.ObjectId(this._id)},{$set:{cart:updatedCart}});
   }
+  async createOrder(){
+    const products=await this.getCart();
+    const order={
+      items:products,
+      user:{
+        _id:new mongodb.ObjectId(this._id),
+        name:this.name,
+      }
+    }
+    const db=getDb();
+    await db.collection('orders').insertOne(order);
+    this.cart={items:[]};
+    await db.collection('users').updateOne({_id:new mongodb.ObjectId(this._id)},{$set:{cart:{items:[]}}});
+  }
+  async getOrder(){
+    const db=getDb();
+    return db.collection('orders').find().toArray();
+  }
   async getCart(){
     const db=getDb();
     const productIds=this.cart.items.map(i=>{
