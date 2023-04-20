@@ -15,10 +15,10 @@ exports.postAddProduct = async (req, res, next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    const product= new Product(title,price,description,imageUrl);
+    const product= new Product(title,price,description,imageUrl,req.user._id);
     const result = await product.save();
     console.log(result,'created Product');
-    res.render('/admin/products');
+    res.redirect('/admin/add-product');
   }catch(err){
     throw new Error(err);
   }
