@@ -1,6 +1,39 @@
+const mongoose=require('mongoose');
+const Schema=mongoose.Schema;
 
-
-
+const userSchema=new Schema({
+  name:{
+    type:String,
+    required:true,
+  },
+  email:{
+    type:String,
+    required:true,
+  },
+  cart:{
+    items:[{
+      productId:{type:Schema.Types.ObjectId,required:true,ref:'product'},
+      quantity:{type:Number,required:true}
+    }]
+  }
+})
+userSchema.methods.addToCart=function(product){
+  const cartProductIndex=this.cart.items.findIndex(cp=>{
+          return cp.productId.toString()===product._id.toString();
+        })
+        let newQuantity=1;
+        let updatedCartItems=[...this.cart.items];
+        if(cartProductIndex>=0){
+          newQuantity=this.cart.items[cartProductIndex].quantity+1;
+          updatedCartItems[cartProductIndex].quantity=newQuantity;
+        }else{
+          updatedCartItems.push({productId:product._id,quantity:newQuantity});
+        }
+        const updatedCart={items:updatedCartItems}
+        this.cart=updatedCart;
+        return this.save()
+}
+module.exports=mongoose.model('user',userSchema);
 // const getDb=require('../util/database').getDb;
 // const mongodb=require('mongodb');
 // class User{
@@ -15,21 +48,7 @@
 //     return db.collection('users').insertOne(this);
 //   }
 //   addToCart(product){
-//     const cartProductIndex=this.cart.items.findIndex(cp=>{
-//       return cp.productId.toString()===product._id.toString();
-//     })
-//     let newQuantity=1;
-//     let updatedCartItems=[...this.cart.items];
-//     if(cartProductIndex>=0){
-//       newQuantity=this.cart.items[cartProductIndex].quantity+1;
-//       updatedCartItems[cartProductIndex].quantity=newQuantity;
-//     }else{
-//       updatedCartItems.push({productId:product._id,quantity:newQuantity});
-//     }
-//     const updatedCart={items:updatedCartItems}
-//     const db=getDb();
-//     return db.collection('users')
-//     .updateOne({_id:new mongodb.ObjectId(this._id)},{$set:{cart:updatedCart}});
+//     
 //   }
 //   async createOrder(){
 //     const products=await this.getCart();

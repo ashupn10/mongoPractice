@@ -9,7 +9,7 @@ const productSchema=new Schema({
   price:{type:Number,require:true},
   description:{type:String,require:true},
   imageUrl:{type:String,require:true},
-
+  userId:{type:Schema.Types.ObjectId,ref:'user',required:true}
 })
 module.exports=mongoose.model('product',productSchema);
 // const getDb=require('../util/database').getDb;
