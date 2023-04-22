@@ -33,6 +33,23 @@ userSchema.methods.addToCart=function(product){
         this.cart=updatedCart;
         return this.save()
 }
+userSchema.methods.removeItemCart=function(id){
+    const cartProductIndex=this.cart.items.findIndex(cp=>{
+      console.log('ID',id);
+      console.log('ProductId',cp.productId);
+      return cp.productId.toString()===id.toString();
+    })
+    let itemarray=this.cart.items;
+    if(cartProductIndex>=0){
+      if(itemarray[cartProductIndex].quantity>1){
+        itemarray[cartProductIndex].quantity--;
+      }else{
+        itemarray.splice(cartProductIndex,1);
+      }
+    }
+    this.cart.items=itemarray;
+    this.save();
+}
 module.exports=mongoose.model('user',userSchema);
 // const getDb=require('../util/database').getDb;
 // const mongodb=require('mongodb');
@@ -81,20 +98,7 @@ module.exports=mongoose.model('user',userSchema);
 //     })
 //   }
 //   async removeItemCart(id){
-//     const db=getDb();
-//     const cartProductIndex=this.cart.items.findIndex(cp=>{
-//       console.log('ID',id);
-//       console.log('ProductId',cp.productId);
-//       return cp.productId.toString()===id.toString();
-//     })
-//     let itemarray=this.cart.items;
-//     if(cartProductIndex>=0){
-//       if(itemarray[cartProductIndex].quantity>1){
-//         itemarray[cartProductIndex].quantity--;
-//       }else{
-//         itemarray.splice(cartProductIndex,1);
-//       }
-//     }
+//     
 //     return db.collection('users')
 //     .updateOne({_id:new mongodb.ObjectId(this._id)},{$set:{cart:{items:itemarray}}});
     
